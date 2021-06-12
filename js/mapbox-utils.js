@@ -1,13 +1,5 @@
-// const mapboxToken = 'pk.eyJ1IjoiZXJpa2F5YWxhIiwiYSI6ImNrcHNmenJrbjBkZXkydm82dTVvZ3E1YmoifQ.6y3_E4JAD-_221jXJAT4VA';
-// mapboxgl.accessToken = mapboxToken;
-// var map = new mapboxgl.Map({
-//     container: 'map',
-//     style: 'mapbox://styles/mapbox/dark-v10',
-//     center: [-98.4936, 29.4241],
-//     zoom: 12
-// })
 mapboxgl.accessToken = MAPBOX_TOKEN;
-var map = new mapboxgl.Map({
+let map = new mapboxgl.Map({
     container: 'map',
     style: 'mapbox://styles/mapbox/streets-v9',
     zoom: 10,
@@ -17,7 +9,7 @@ var map = new mapboxgl.Map({
 
 let marker;
 
-addMapEvent();
+mapEvent();
 
 let geocoder = setGeocoder();
 addGeocoderToMap(geocoder);
@@ -29,36 +21,33 @@ function setGeocoder() {
         marker: false
     })
 }
-function addGeocoderToMap(geocoder) {
+function addGeocoderToMap(geocoder){
     map.addControl(geocoder);
-    geocoder.on('result', function (event) {
+    geocoder.on('result', function (event){
+        console.log(event.result.place_name);
+        console.log(event.result.geometry.coordinates);
         console.log(event);
-        if (marker) {
-            marker.remove()
-        }
-        getMarker(event.result.geometry.coordinates).setPopup(getPopup(event.result.place_name)
-        ).togglePopup()
-    })
+        setMarker(event.result.geometry.coordinates);
+        marker.setPopup(displayPopup(event.result.place_name));
+
+        fetchForeCast(event.result.geometry.coordinates);
+    });
 }
 
-// creates the marker
-function getMarker(point) {
-    return new mapboxgl.Marker().setLngLat(point).addTo(map);
+function setMarker(point) {
+    if(!marker) {
+        marker = new mapboxgl.Marker().setLngLat(point).addTo(map)
+    }else{
+        marker.setLngLat(point);
+    }
 }
 
-// adds event to map that changes location of marker based
-// on where the user clicks
-function addMapEvent() {
-    map.on('click', function (event) {
-        console.log(event.lngLat);
-        if (!marker) {
-            marker = getMarker(event.lngLat);
-        } else {
-            marker.setLngLat(event.lngLat);
-        }
-    })
+function mapEvent(){
+    map.on('click', function (event){
+        setMarker(event.lngLat)
+    });
 }
 
-function getPopup(textDetails) {
+function displayPopup(textDetails){
     return new mapboxgl.Popup().setHTML(`<p>${textDetails}</p>`).addTo(map);
 }
