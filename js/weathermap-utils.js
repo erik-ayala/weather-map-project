@@ -10,7 +10,7 @@ let fetchForeCast = function (coordinates) {
         },
         success: function (data){
             // console.log(data)
-            buildDOMObjects(filterWeatherObjects(data));
+            buildDOMObjects(filterWeatherObjects(data), filterLocation(data));
         }
 
     });
@@ -24,4 +24,8 @@ function filterWeatherObjects(data){
         }
     }
     return arr;
+}
+
+function filterLocation (data) {
+    return data.city
 }
