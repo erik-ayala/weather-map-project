@@ -16,8 +16,8 @@ function buildDOMObjects (forecastData, location) {
         let formattedDate = new Date(date).toDateString();
 
         $("#forecast").append(`
-<div class="card col-2 mx-4" style="width: 18rem;">
-        <div class="card-body">
+<div class="card col-2 mx-4" style="width: 18rem;" id="cardBody">
+        <div class="card-body" >
             <h4 class="card-title">
             ${loc}</h4>
             <br>
@@ -38,4 +38,5 @@ function buildDOMObjects (forecastData, location) {
 </div> `)
     }
 }
-// $('#forecast').append("<div class='card'><p> ${forecastData} </p></div>");
+
+$("body").css("background-color", "#2c3e50")

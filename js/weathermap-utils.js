@@ -9,12 +9,26 @@ let fetchForeCast = function (coordinates) {
             units: "imperial"
         },
         success: function (data){
-            // console.log(data)
             buildDOMObjects(filterWeatherObjects(data), filterLocation(data));
         }
 
     });
 }
+
+$(document).ready(function(event) {
+    $.ajax({
+        url: "http://api.openweathermap.org/data/2.5/forecast",
+        data: {
+            APPID: OPEN_WEATHERMAP_TOKEN,
+            q: "San Antonio, USA",
+        units: "imperial"
+        },
+
+        success: function (data){
+            buildDOMObjects(filterWeatherObjects(data), filterLocation(data))
+        }
+    });
+});
 
 function filterWeatherObjects(data){
     let arr = [];
